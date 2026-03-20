@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Naive Bayes & LDA — Dashboard</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',system-ui,sans-serif; background:#0d1117; color:#c9d1d9; }
+.header { background:linear-gradient(135deg,#161b22,#0d1117); padding:24px 40px; border-bottom:1px solid #30363d; }
+.header h1 { font-size:22px; color:#58a6ff; font-weight:600; }
+.header p { color:#8b949e; font-size:13px; margin-top:4px; }
+.kpi-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:16px; padding:20px 40px; }
+.kpi { background:#161b22; border:1px solid #30363d; border-radius:8px; padding:16px; text-align:center; }
+.kpi .value { font-size:28px; font-weight:700; color:#58a6ff; }
+.kpi .label { font-size:11px; color:#8b949e; text-transform:uppercase; letter-spacing:.5px; margin-top:4px; }
+.kpi.green .value { color:#3fb950; }
+.kpi.red .value { color:#f85149; }
+.kpi.orange .value { color:#f0883e; }
+.kpi.purple .value { color:#bc8cff; }
+.charts { display:grid; grid-template-columns:1fr 1fr; gap:20px; padding:20px 40px; }
+.chart-box { background:#161b22; border:1px solid #30363d; border-radius:8px; padding:16px; min-height:380px; }
+.chart-box.full { grid-column:1/-1; }
+.chart-title { font-size:14px; font-weight:600; color:#c9d1d9; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid #21262d; }
+.footer { padding:16px 40px; text-align:center; color:#484f58; font-size:11px; border-top:1px solid #21262d; margin-top:20px; }
+</style>
+</head><body>
+<div class="header"><h1>Naive Bayes & LDA</h1><p>Jira Bug Routing & Silicon Defect Classification — Text & Tabular NB Pipelines</p></div>
+<div class="kpi-row"><div class="kpi green"><div class="value">88.6%</div><div class="label">Jira Accuracy</div></div>
+<div class="kpi green"><div class="value">99.9%</div><div class="label">Silicon Accuracy</div></div>
+<div class="kpi orange"><div class="value">6</div><div class="label">Jira Classes</div></div>
+<div class="kpi orange"><div class="value">7</div><div class="label">Silicon Classes</div></div>
+<div class="kpi purple"><div class="value">15K</div><div class="label">Jira Samples</div></div>
+<div class="kpi purple"><div class="value">50K</div><div class="label">Silicon Samples</div></div>
+</div>
+<div class="charts"><div class="chart-box" id="c1"><div class="chart-title">Chart 1</div></div>
+<div class="chart-box" id="c2"><div class="chart-title">Chart 2</div></div>
+<div class="chart-box" id="c3"><div class="chart-title">Chart 3</div></div>
+<div class="chart-box" id="c4"><div class="chart-title">Chart 4</div></div>
+<div class="chart-box" id="c5"><div class="chart-title">Chart 5</div></div>
+<div class="chart-box" id="c6"><div class="chart-title">Chart 6</div></div>
+</div>
+<div class="footer">AIML Engineering Lab &mdash; 008_naive_bayes_lda</div>
+<script>
+
+const plotBg='#161b22',paperBg='#161b22',gridColor='#21262d',textColor='#c9d1d9';
+const LB={paper_bgcolor:paperBg,plot_bgcolor:plotBg,font:{color:textColor,size:11},margin:{l:50,r:20,t:10,b:40},xaxis:{gridcolor:gridColor,zerolinecolor:gridColor},yaxis:{gridcolor:gridColor,zerolinecolor:gridColor}};
+const C10=['#58a6ff','#3fb950','#f0883e','#f85149','#bc8cff','#79c0ff','#56d364','#e3b341','#ff7b72','#d2a8ff'];
+function LM(o){return Object.assign({},JSON.parse(JSON.stringify(LB)),o||{});}
+
+
+Plotly.newPlot('c1',[{x:['Documentation','Firmware','Hardware','Performance','Security','Software'],y:[0.97,0.74,0.94,0.76,0.90,0.95],type:'bar',marker:{color:C10}}],LM({yaxis:{title:'F1 Score',range:[0.6,1.05]},xaxis:{title:'Jira Bug — Per-Class F1'}}));
+
+Plotly.newPlot('c2',[{x:['Class 0','Class 1','Class 2','Class 3','Class 4','Class 5','Class 6'],y:[1.00,1.00,1.00,0.99,1.00,1.00,1.00],type:'bar',marker:{color:C10}}],LM({yaxis:{title:'F1 Score',range:[0.95,1.01]},xaxis:{title:'Silicon Defect — Per-Class F1'}}));
+
+Plotly.newPlot('c3',[{x:['MultinomialNB','ComplementNB','GaussianNB'],y:[0.886,0.880,0.850],type:'bar',marker:{color:['#58a6ff','#3fb950','#f0883e']},text:['88.6%','88.0%','85.0%'],textposition:'outside'}],LM({yaxis:{title:'Accuracy',range:[0.8,0.92]},xaxis:{title:'Jira — NB Variant Comparison'}}));
+
+Plotly.newPlot('c4',[{x:['GaussianNB','LDA','QDA'],y:[0.999,0.998,0.995],type:'bar',marker:{color:['#58a6ff','#3fb950','#f0883e']},text:['99.9%','99.8%','99.5%'],textposition:'outside'}],LM({yaxis:{title:'Accuracy',range:[0.99,1.005]},xaxis:{title:'Silicon — Classifier Comparison'}}));
+
+Plotly.newPlot('c5',[{labels:['Documentation','Firmware','Hardware','Performance','Security','Software'],values:[2500,2500,2500,2500,2500,2500],type:'pie',marker:{colors:C10},hole:0.4}],LM({margin:{l:20,r:20,t:10,b:20}}));
+
+Plotly.newPlot('c6',[{x:['Comp 1','Comp 2','Comp 3','Comp 4','Comp 5','Comp 6'],y:[0.35,0.25,0.15,0.10,0.08,0.07],type:'bar',marker:{color:C10}}],LM({yaxis:{title:'Explained Variance'},xaxis:{title:'LDA Components'}}));
+
+</script>
+</body></html>
